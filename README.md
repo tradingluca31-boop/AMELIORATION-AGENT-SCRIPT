@@ -6,6 +6,44 @@ This repo contains **prompt templates** and **examples** to help other Claude Co
 
 ---
 
+## 0. BEHAVIORAL ANALYSIS - PSYCHANALYSE DE L'AGENT (NEW!)
+
+**The most complete prompt** - Understand WHY your agent doesn't trade:
+
+```
+Je veux comprendre POURQUOI mon agent n'ouvre pas de positions ou très peu.
+Crée un script de psychanalyse comportementale qui répond à ces questions:
+
+Q1: DISTRIBUTION - Que choisit l'agent ? (SELL/HOLD/BUY %)
+Q2: PEUR DU RISQUE - A-t-il peur d'ouvrir ? Préfère-t-il HOLD ?
+Q3: FERMETURE - Quand il ouvre, ferme-t-il ses positions ?
+Q4: REWARDS - Quels rewards reçoit-il pour chaque action ?
+Q5: CONTEXTE - Dans quel contexte ouvre-t-il (si jamais) ?
+Q6: OBSERVATIONS - Que "voit" l'agent ? Les features sont-elles informatives ?
+Q7: ÉVOLUTION - Le comportement change-t-il au fil du temps ?
+Q8: SYNTHÈSE - Quel est son "profil psychologique" ?
+
+Je veux comprendre comment il travaille step by step.
+Donne-moi un DIAGNOSTIC COMPORTEMENTAL avec hypothèses.
+```
+
+**Output Example:**
+
+```
+DIAGNOSTIC COMPORTEMENTAL:
+  1. BLOQUÉ: N'ouvre jamais de positions
+  2. MAL RÉCOMPENSÉ: HOLD plus profitable que TRADE
+
+HYPOTHÈSE PRINCIPALE: L'agent est BLOQUÉ (ne peut pas ouvrir)
+Causes possibles:
+  1. FIX 8 (Over-Trading Protection) bloque les trades
+  2. Bug dans _open_position()
+
+RECOMMANDATION: Vérifier le code de _open_position()
+```
+
+---
+
 ## 1. Interview Prompt (Diagnostic)
 
 Use this prompt when your agent has **0 trades** or unexpected behavior:
