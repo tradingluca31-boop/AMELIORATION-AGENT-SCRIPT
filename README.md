@@ -150,7 +150,79 @@ Vérifie que les données de prix sont correctes:
 
 ---
 
-## 7. Full Diagnostic Workflow
+## 7. Check Q-Values / Policy Output Prompt (NEW!)
+
+See what your agent "thinks":
+
+```
+Crée un script qui montre ce que l'agent "pense" vraiment:
+
+1. Affiche les probabilités d'action (policy output) pour PPO
+   - P(SELL), P(HOLD), P(BUY)
+   - Si P(HOLD) >> P(TRADE) → Agent a appris que ne rien faire est "safe"
+
+2. Calcule l'entropy de la policy
+   - Entropy basse (< 0.3) → Agent trop déterministe, n'explore plus
+   - Entropy haute (> 0.8) → Bonne exploration
+
+3. Détecte le mode collapse
+   - Si une action > 70% → WARNING
+
+Usage: python analysis/check_qvalues.py --model models/best_model.zip
+```
+
+---
+
+## 8. Check Reward Function Prompt (NEW!)
+
+Checklist for reward function problems:
+
+```
+Crée un script qui vérifie ma reward function avec ces 4 questions:
+
+A) Est-ce que HOLD donne un reward (même petit)?
+   → Si oui: l'agent est RÉCOMPENSÉ pour ne rien faire!
+
+B) Les trades perdants sont-ils TROP pénalisés?
+   → Si ratio |perte|/|gain| > 3: l'agent a PEUR de perdre
+
+C) Y a-t-il un reward UNIQUEMENT à la clôture?
+   → PIÈGE: Si reward qu'à clôture + pertes pénalisées
+   → Agent apprend: ne jamais ouvrir = jamais de perte = SAFE
+
+D) Le risk/reward est-il encouragé?
+   → Gros gains doivent être mieux récompensés que petits gains
+
+Donne-moi un verdict: PROBLEME / ATTENTION / OK pour chaque question.
+```
+
+---
+
+## 9. Full Diagnostic Prompt (NEW!)
+
+Complete diagnostic in one script:
+
+```
+Crée un diagnostic COMPLET qui fait 6 tests:
+
+TEST 1: Distribution des actions (HOLD/BUY/SELL %)
+TEST 2: Random vs Trained comparison (si model dispo)
+TEST 3: Observations normalization check
+TEST 4: Reward per action type
+TEST 5: Exploration (entropy) analysis
+TEST 6: Positions analysis
+
+À la fin, donne:
+- Liste des PROBLÈMES détectés
+- Liste des SOLUTIONS recommandées
+- VERDICT: AGENT NECESSITE REFONTE / A CORRIGER / SEMBLE OK
+
+Usage: python analysis/full_diagnostic.py --episodes 20
+```
+
+---
+
+## 10. Full Diagnostic Workflow
 
 Complete prompt sequence for debugging 0 trades:
 
